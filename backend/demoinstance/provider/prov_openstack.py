@@ -13,11 +13,21 @@ class Openstack(DemoProv):
             self.region = config['region']
         else:
             self.region = None
+        if 'user_domain' in config:
+            user_domain = config['user_domain']
+        else:
+            user_domain = 'Default'
+        if 'project_domain' in config:
+            project_domain = config['project_domain']
+        else:
+            project_domain = 'Default'
 
         self.nova = Client(
             2, self.user, self.password,
             self.tenant, self.url,
-            region_name=self.region
+            region_name=self.region,
+            user_domain_name=user_domain,
+            project_domain_name=project_domain
         )
 
     def get_instances(self):
