@@ -206,6 +206,7 @@ flavor_id |No|Openstack flavor id or name
 prefix |No|Openstack prefix name 
 user_data|yes|nova userdata to inject in the instance
 meta|yes|Add meta to instance
+security_groups|yes|Comma separated list of security group names, default to the project default group
 
 #### example
 Example with only one instance:
