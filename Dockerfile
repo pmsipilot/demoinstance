@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-LABEL maintainer="industrialisation@ospi.fr"
+LABEL maintainer="Loïc PORTE"
 
 RUN apt-get update && apt-get install -y git python python-dev\
  python-pip mysql-client libmysqlclient-dev nodejs npm\
