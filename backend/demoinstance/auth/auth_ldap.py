@@ -31,7 +31,7 @@ class AuthLdap(DemoAuth):
         if len(res) > 1:
             raise Exception("Too many users returned")
         if len(res) < 1:
-            raise ldap.INVALID_CREDENTIALS
+            return False
 
         dn, attributes = res[0]
         if not self.__try_bind(dn, password):
