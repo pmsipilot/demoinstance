@@ -101,13 +101,20 @@ class Openstack(DemoProv):
                 value = tmp_meta.split('=')[1]
                 meta[key] = value
 
+        security_groups = None
+        if 'security_groups' in image_conf:
+            security_groups = [
+                sg.strip() for sg in image_conf['security_groups'].split(',')
+            ]
+
         instance = self.nova.servers.create(
             instance_prefix + 'test',
             image.id,
             flavor.id,
             userdata=user_data,
             nics=nics,
-            meta=meta
+            meta=meta,
+            security_groups=security_groups
         )
         return self.__get_instance_info(instance)['id']
 
