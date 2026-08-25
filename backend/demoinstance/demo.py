@@ -112,28 +112,30 @@ class Demo():
             self.database.add(database_instance)
             self.database.commit()
 
-            pool = self.get_pooled_instance_database(image_key)
-            if len(pool) > 0:
-                new_instance_id = pool.pop(0)['id']
-            else:
-                new_instance_id = self.provider.create_instance(image)
+            try:
+                pool = self.get_pooled_instance_database(image_key)
+                if len(pool) > 0:
+                    new_instance_id = pool.pop(0)['id']
+                else:
+                    new_instance_id = self.provider.create_instance(image)
 
-            # If more than max go to max
-            life_time = image['time_default']
-            if time is not None and 'time_max' in image and\
-                    time <= image['time_max']:
-                life_time = time
+                # If more than max go to max
+                life_time = image['time_default']
+                if time is not None and 'time_max' in image and\
+                        time <= image['time_max']:
+                    life_time = time
 
-            self.database_insert_server(
-                new_instance_id, status='CREATED',
-                life_time=life_time,
-                image_key=image_key, token=token,
-                launched_at=datetime.datetime.now()
-            )
-
-            # Remove the demand
-            self.database.delete(database_instance)
-            self.database.commit()
+                self.database_insert_server(
+                    new_instance_id, status='CREATED',
+                    life_time=life_time,
+                    image_key=image_key, token=token,
+                    launched_at=datetime.datetime.now()
+                )
+            finally:
+                # Remove the demand even if the provider failed,
+                # otherwise the ASK row leaks and eats the quota forever
+                self.database.delete(database_instance)
+                self.database.commit()
 
             return new_instance_id
 
